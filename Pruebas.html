@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ClothesTeen: Moda juvenil a tu alcance. Encuentra lo último en tendencias para hombres y mujeres.">
+    <meta name="keywords" content="moda juvenil, ropa, hombres, mujeres, tienda de ropa">
+    <title>ClothesTeen</title>
+    <link rel="stylesheet" href="ClothesTeen.css">
+</head>
+<body id="mainBody" style="overflow: auto;">
+    <header>
+        <center><h1>ClothesTeen</h1></center>
+        <center>
+            <img src="C:\Users\javir\OneDrive\Escritorio\Proyecto Progra\Logo+A.png" alt="Logotipo de ClothesTeen" width="200" title="Nuestro Logo">
+        </center>
+        <nav>
+            <ul>
+                <li><a href="Men.html">Hombre</a></li>
+                <li><a href="Women.html">Mujer</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <hr>
+
+    <div class="filter-container">
+        <button class="filter-button" onclick="filterCategory('all')">Todos</button>
+        <button class="filter-button" onclick="filterCategory('ropa')">Ropa</button>
+        <button class="filter-button" onclick="filterCategory('zapatos')">Zapatos</button>
+        <button class="filter-button" onclick="filterCategory('accesorios')">Accesorios</button>
+    </div>
+
+    <center>
+        <div class="search-container">
+            <label for="searchBar" hidden>Buscar productos:</label>
+            <input type="text" id="searchBar" class="search-bar" placeholder="Buscar productos..." oninput="showSuggestions()">
+            <div id="suggestions" class="suggestions-box"></div>
+            <button class="search-button" onclick="searchProducts()">Buscar</button>
+        </div>
+    </center>
+
+    <div class="cart-container">
+        <button class="cart-button" onclick="toggleCart()">
+            <i class="fas fa-shopping-cart"></i> ??Carrito (<span id="cartCount">0</span>)
+        </button>
+        <div id="cartDropdown" class="cart-dropdown">
+            <p id="cartContent">Tu carrito está vacío.</p>
+            <button onclick="clearCart()">Vaciar carrito</button>
+        </div>
+    </div>
+
+    <hr>
+				
+    <section class="products-container">
+        <h3>Productos disponibles</h3>
+        <div id="products" class="product-list">
+            <!-- Productos aquí (camisas, zapatos, etc.) -->
+        </div>
+    </section>
+
+    <div class="product-review">
+        <p><strong>Reseñas:</strong></p>
+        <p>????? (4.5/5 en 20 reseñas)</p>
+        <button onclick="openReviewModal('Camisa Azul')">Escribir una reseña</button>
+    </div>
+
+    <div id="recommendations">
+        <h3>Te recomendamos</h3>
+        <div id="recommendationProducts"></div>
+    </div>
+
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeReviewModal()">&times;</span>
+            <h2>Escribir reseña para <span id="productName"></span></h2>
+            <textarea id="reviewText" placeholder="Escribe tu reseña aquí..."></textarea>
+            <br>
+            <label for="rating">Calificación:</label>
+            <select id="rating">
+                <option value="1">1 estrella</option>
+                <option value="2">2 estrellas</option>
+                <option value="3">3 estrellas</option>
+                <option value="4">4 estrellas</option>
+                <option value="5">5 estrellas</option>
+            </select>
+            <br>
+            <button onclick="submitReview()">Enviar reseña</button>
+        </div>
+    </div>
+
+    <div id="notification"></div>
+
+    <footer>
+        <div class="contact-info">
+            <p>Teléfono de contacto: 5973-5460</p>
+        </div>
+        <div class="social-media">
+            <a href="#">Instagram</a> | <a href="#">Facebook</a> | <a href="#">Twitter</a>
+        </div>
+    </footer>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+
+        const productSuggestions = ['Camisa Azul', 'Falda Negra', 'Zapatos Deportivos', 'Chaqueta de Cuero'];
+
+        function addToCart(productName, productPrice) {
+            cart.push({ name: productName, price: productPrice });
+            updateCart();
+            localStorage.setItem('cart', JSON.stringify(cart));
+            showNotification(`${productName} agregado al carrito`);
+            showRecommendations(productName);  // Mostrar recomendaciones basadas en el producto añadido
+        }
+
+        function showRecommendations(addedProduct) {
+            const recommendationContainer = document.getElementById('recommendationProducts');
+            recommendationContainer.innerHTML = '';  // Limpia las recomendaciones previas
+            
+            let recommendations = [];
+            if (addedProduct.includes('Camisa')) {
+                recommendations = ['Pantalones Negros', 'Chaqueta de Cuero'];
+            } else if (addedProduct.includes('Zapatos')) {
+                recommendations = ['Calcetines Deportivos', 'Mochila'];
+            }
+
+            recommendations.forEach(rec => {
+                let recElement = document.createElement('div');
+                recElement.innerText = rec;
+                recommendationContainer.appendChild(recElement);
+            });
+        }
+
+        function toggleCart() {
+            const cartDropdown = document.getElementById('cartDropdown');
+            cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function updateCart() {
+            const cartCount = document.getElementById('cartCount');
+            const cartContent = document.getElementById('cartContent');
+            cartCount.innerText = cart.length;
+            cartContent.innerHTML = cart.length === 0 ? 'Tu carrito está vacío.' : '';
+            cart.forEach(item => {
+                cartContent.innerHTML += `<p>${item.name} - $${item.price}</p>`;
+            });
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCart();
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 2000);
+        }
+
+        function showSuggestions() {
+            const input = document.getElementById('searchBar').value.toLowerCase();
+            const suggestionsBox = document.getElementById('suggestions');
+            suggestionsBox.innerHTML = '';
+
+            if (input) {
+                const filteredSuggestions = productSuggestions.filter(product =>
+                    product.toLowerCase().includes(input)
+                );
+
+                if (filteredSuggestions.length) {
+                    suggestionsBox.style.display = 'block';
+                    filteredSuggestions.forEach(suggestion => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.innerText = suggestion;
+                        suggestionItem.onclick = () => {
+                            document.getElementById('searchBar').value = suggestion;
+                            suggestionsBox.style.display = 'none';
+                        };
+                        suggestionsBox.appendChild(suggestionItem);
+                    });
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+            } else {
+                suggestionsBox.style.display = 'none';
+            }
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
+            const products = document.querySelectorAll('.product');
+            products.forEach(product => {
+                product.style.display = product.innerText.toLowerCase().includes(query) ? 'block' : 'none';
+            });
+        }
+
+        function openReviewModal(productName) {
+            document.getElementById('reviewModal').style.display = 'flex';
+            document.getElementById('productName').innerText = productName;
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').style.display = 'none';
+        }
+
+        function submitReview() {
+            let reviewText = document.getElementById('reviewText').value;
+            let productName = document.getElementById('productName').innerText;
+            let rating = document.getElementById('rating').value;
+
+            if (reviewText.trim() === '') {
+                alert('Por favor, escribe una reseña antes de enviarla.');
+                return;
+            }
+
+            reviews.push({ product: productName, text
+

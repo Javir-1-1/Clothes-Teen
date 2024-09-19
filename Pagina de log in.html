@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión - ClothesTeen</title>
+    <style>
+      body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(45deg, #ffffff, #f7f7f7, #ededed, #e0e0e0);
+    background-size: 300% 300%;
+    animation: gradientAnimation 10s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+ 
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            padding-left: 40px; /* Espacio adicional para los íconos */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .input-group input:focus {
+            box-shadow: 0 0 5px rgba(255, 105, 135, 0.5);
+        }
+
+        .input-group .icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: black;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: gray;
+            transform: scale(1.05);
+        }
+
+        .toggle-password {
+            cursor: pointer;
+            font-size: 14px;
+            color: #555;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .error-message {
+            color: red;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .remember-me input {
+            margin-right: 10px;
+        }
+		
+		
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+
+   
+        <div class="input-group">
+            <span class="icon">👤</span>
+            <input type="text" id="username" placeholder="Usuario">
+        </div>
+
+       
+        <div class="input-group">
+            <span class="icon">🔒</span>
+            <input type="password" id="password" placeholder="Contraseña">
+        </div>
+
+       
+        <span class="toggle-password" onclick="togglePasswordVisibility()">Mostrar</span>
+
+      
+        <div class="remember-me">
+            <input type="checkbox" id="rememberMe">
+            <label for="rememberMe">Recordarme</label>
+        </div>
+
+        
+        <button onclick="login()">Iniciar Sesión</button>
+
+       
+        <p class="error-message" id="errorMessage">Usuario o contraseña incorrectos</p>
+    </div>
+
+    <script>
+       
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        }
+
+        
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+        
+            const validUsername = "ClothesTeen";
+            const validPassword = "1234";
+
+            if (username === validUsername && password === validPassword) {
+     
+                window.location.href = "ClothesTeen.html";
+            } else {
+                let errorMessage = '';
+                if (username !== validUsername) {
+                    errorMessage = 'Usuario incorrecto';
+                } else if (password !== validPassword) {
+                    errorMessage = 'Contraseña incorrecta';
+                }
+                document.getElementById('errorMessage').innerText = errorMessage;
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

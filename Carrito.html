@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Carrito de compras de ClothesTeen">
+    <title>Carrito de Compras - ClothesTeen</title>
+    <link rel="stylesheet" href="ClothesTeen.css">
+    <style>
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: auto;
+            margin-right: 20px;
+        }
+
+        .cart-item p {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .cart-item button {
+            margin-left: 20px;
+        }
+
+        .cart-page-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <center><h1>Carrito de Compras</h1></center>
+    </header>
+
+    <center>
+        <a href="ClothesTeen.html"><img src="C:\Users\javir\OneDrive\Escritorio\Proyecto Progra\Imagenes\Logo de Clothes Teen.png" width="200" title="HOME"></a>
+    </center>
+
+    <div class="cart-page-container">
+        <h2>Tu Carrito</h2>
+        <hr>
+        <div id="cartItems">
+        </div>
+        <hr>
+        <h3>Total: $<span id="cartTotal">0</span></h3>
+        <hr>
+        <div class="cart-actions">
+            <button class="filter-button" onclick="continueShopping()">Seguir comprando</button>
+            <button class="filter-button" onclick="clearCart()">Vaciar carrito</button>
+            <button class="filter-button" onclick="checkout()">Finalizar compra</button>
+        </div>
+    </div>
+
+        <footer>
+        <div class="contact-info">
+            <p>Teléfono de contacto: 5973-5460</p>
+        </div>
+        <div class="social-media">
+            <a  href="ClothesTeen.html"><img src="C:\Users\javir\OneDrive\Escritorio\Proyecto Progra\Imagenes\Instagram.png" width="50"></a> 
+			<a href="#"><img src="C:\Users\javir\OneDrive\Escritorio\Proyecto Progra\Imagenes\Facebook.png" width="50"></a> 
+			<a href="#"><img src="C:\Users\javir\OneDrive\Escritorio\Proyecto Progra\Imagenes\X.png" width="50"></a>
+        </div>
+		
+		<p>&copy; 2024 ClothesTeen. Todos los derechos reservados.</p>
+		<br>
+		   <center>
+            <img src="C:\Users\javir\OneDrive\Escritorio\Proyecto Progra\Imagenes\Logo de ClothesTeen en negro.png" alt="Logotipo de ClothesTeen" width="200" title="Nuestro Logo">
+        </center>
+    </footer>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function renderCartItems() {
+            let cartItemsContainer = document.getElementById('cartItems');
+            let cartTotal = 0;
+            cartItemsContainer.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = "<p>Tu carrito está vacío.</p>";
+                document.getElementById('cartTotal').innerText = "0";
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                let productElement = document.createElement('div');
+                productElement.className = 'cart-item';
+
+                let imagePath = '';
+                switch(item.name) {
+                    case 'Camisa Azul':
+                        imagePath = 'C:\\Users\\javir\\OneDrive\\Escritorio\\Proyecto Progra\\Camisa Azul.png';
+                        break;
+                    case 'Camisa Verde':
+                        imagePath = 'C:\\Users\\javir\\OneDrive\\Escritorio\\Proyecto Progra\\Camisa verde.jpeg';
+                        break;
+                    case 'Zapatos Deportivos':
+                        imagePath = 'C:\\Users\\javir\\OneDrive\\Escritorio\\Proyecto Progra\\Zapatos deportivos.jpeg';
+                        break;
+                    case 'Chaqueta de Cuero':
+                        imagePath = 'C:\\Users\\javir\\OneDrive\\Escritorio\\Proyecto Progra\\Chaqueta cuero.jpeg';
+                        break;
+                    case 'Gorra Negra':
+                        imagePath = 'C:\\Users\\javir\\OneDrive\\Escritorio\\Proyecto Progra\\Gorra negra.jpeg';
+                        break;
+                    case 'Mochila':
+                        imagePath = 'C:\\Users\\javir\\OneDrive\\Escritorio\\Proyecto Progra\\Mochila.jpeg';
+                        break;
+                    case 'Botas de Cuero':
+                        imagePath = 'C:\\Users\\javir\\OneDrive\\Escritorio\\Proyecto Progra\\Botas cuero.jpeg';
+                        break;
+                    case 'Falda Negra':
+                        imagePath = 'C:\\Users\\javir\\OneDrive\\Escritorio\\Proyecto Progra\\Falda negra.jpeg';
+                        break;
+                }
+
+                productElement.innerHTML = `
+                    <img src="${imagePath}" alt="${item.name}">
+                    <p>${item.name} - $${item.price}</p>
+                    <button class="filter-button" onclick="removeItem(${index})">Eliminar</button>
+                `;
+                cartItemsContainer.appendChild(productElement);
+                cartTotal += item.price;
+            });
+
+            // Actualiza el total del carrito
+            document.getElementById('cartTotal').innerText = cartTotal.toFixed(2);
+        }
+
+        // Función para vaciar el carrito
+        function clearCart() {
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCartItems();
+        }
+
+        // Función para eliminar un producto del carrito
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCartItems();
+        }
+
+        // Función para finalizar la compra (placeholder)
+        function checkout() {
+            alert("Gracias por tu compra!");
+            clearCart();
+        }
+
+        // Inicializa la página mostrando los productos del carrito
+        renderCartItems();
+		
+		   // Función para seguir comprando (redirige a la página de catálogo)
+        function continueShopping() {
+            window.location.href = "ClothesTeen.html";
+        }
+
+        // Inicializa la página mostrando los productos del carrito
+        renderCartItems();
+		
+		
+    </script>
+</body>
+</html>
